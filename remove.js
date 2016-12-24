@@ -1,17 +1,17 @@
 const dbName = process.argv[2] || 'Eugene';
-const username = 'tinatime';
+const collectionName = process.argv[3] || 'users';
+const entityId = process.argv[4] || '0';
+
+console.log(dbName, collectionName, entityId);
 
 const mongo = require('mongodb').MongoClient;
 mongo.connect(`mongodb://localhost:27017/${dbName}`, (err, db) => {
   if (err) throw err;
 
-  const users = db.collection('users');
+  const collection = db.collection(collectionName);
 
-  users.updateOne({username}, {$set: {age: 40}}, () => {
-    users.findOne({username}, (err, data) => {
-      console.log(JSON.stringify(data));
-      db.close();
-    });
+  collection.deleteOne({_id: entityId}, (err, res) => {
+    console.log(res);
+    db.close();
   });
 });
-
